@@ -76,7 +76,11 @@ MU5 vardų erdvė yra sudaryta iš 32 asociatyvių registrų, savyje turinčių 
 
 MU5 naudojo virtualų adresavimo režimą. To priežastimi buvo tai, kad pagrindinė operacinės sistemos užduotis yra vardų erdvės valdymas, kurio dominuojanti dalis buvo susijusi su automatiniu informacijos judėjimu tarp atminties lygių. Toks judėjimas reikalauja tikrųjų informacijos adresų judėjimas, jeigu šiems adresams bus leista išsisklaidyti po programos atmintį, tai gali privesti prie tam tikrų problemų. Pabaigoje buvo nutarta naudoti didelį virtualų adresą ir padalinti jį į tam tikrą segmentų skaičių. Adresas yra dalinamas į tris laukus, 4 bitų proceso numeris, 14 bitų segmento skaičius ir 16 bitų adresas apibrėžiantis 32 bitų žodį segmento viduje.
 
+\newpage
+
 \section {Mikroarchitektūra}
+
+Svarbiausia MU5 procesoriaus mikroarchitektūros dalis yra pagrindinis operandų vienetas (Primary Operand Unit (PROP)) kuriam buvo tiekiamos instrukcijos iš instrukcijų buferio vieneto (IBU), o virtualių į tikruosius adresus konversija vyko talpyklos prieigos kontrolės vienete (Store Access Control Unit (SAC)), kuris koordinavo užklausas lokaliai talpyklai. Prieiga prie antrinių operandų vieneto naudojant deskriptorių mechanizmą reikalavo dviejų logiškai skirtingų dalių, viena adresų formavimui (Descriptor Addressing Unit) ir viena operandų pasirinkimui iš atitinkamo šiuo metu laikomo žodžio (Descriptor Operand Processing Unit), kartu su operandų buferio sistema (Operand Buffer System) kuri buvo įdiegta tarp jų, formuojant antrinį operandų vienetą (Secondary Operand Unit (SEOP)) Akumuliatoriaus vienetas (turintis iš esmės slankiojo kablelio vykdymo įrangą) akivaizdžiai turėjo būti įdiegtas už SEOP, nes didžiąją dalį laiko dorotų masyvų elementus, kuriuos priėjo SEOP, kitoje pusėje B vienetas buvo įdiegtas arčiau PROP, paraleliai su deskriptorių adresavimo vienetu, nes jis turėjo pateikti modifikavimo reikšmes, todėl daugiausiai dirbtų su įvardytais kiekiais, o ne masyvo elementais.
 
 \begin{figure}[h]
 	\includegraphics[scale=0.4]{mu5-march}
@@ -105,7 +109,10 @@ MU5 naudojo virtualų adresavimo režimą. To priežastimi buvo tai, kad pagrind
 \end{tabular}
 \end{center}
 
-\
+\section {
+
+\newpage
+
 
 \begin{thebibliography}{9}
 \bibitem{mu5system}
