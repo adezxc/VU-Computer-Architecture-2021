@@ -23,8 +23,14 @@ _opt:
     .pab:
         movsd xmm0, xmm1
         pop rbx
-        ret   
-br
+        ret 
+    .mazesnis:
+          cmpsd xmm1, xmm3, 0
+          je .naujas
+          jmp .tesk
+          .naujas:
+          movsd xmm1, [rdi]
+          jmp .tesk  
         
 _suma:
         push rbx
