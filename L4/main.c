@@ -5,22 +5,25 @@
 
 extern double opt(double* masyvas, uint64_t  kiek);
 extern uint64_t arvisi(double* masyvas, uint64_t kiek);
+extern double suma(double* masyvas, uint64_t kiek);
 
 int main() {
     FILE *fptr;
     int num, which = 0;
     fptr = fopen("input.dat", "r");
-    int n;
-    fscanf(fptr, "%d", &n);
-    printf("%d\n", n);
+    uint64_t n;
+    fscanf(fptr, "%llu", &n);
     double input[n];
 
     for (int i = 0; i < n; i++) {
         double num;
-        fscanf(fptr, "%2lf", num);
+        fscanf(fptr, "%lf", &num);
         input[i] = num;
     }
 
+    double x = opt(input, n);
+    double y = suma(input, n);
+    printf("%f", x);
 
     fclose(fptr);
 
