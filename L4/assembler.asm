@@ -1,53 +1,82 @@
 ; Paprastos funkcijos su slankaus kablelio skaičiais
-        global  _opt, _suma    ; , normalizavimas
+
+                global  opt, arvisi    ; , normalizavimas
+                
         section .text
 ;-----------------------------------------------------------------------------
 ;   double opt(double* masyvas, uint64_t kiek)
 ;                         rdi          rsi  
 ;-----------------------------------------------------------------------------
-_opt:
+opt:
         push rbx
-        xorpd   xmm0, xmm0 ; xmm0 <- 0
+        xorpd xmm0, xmm0
         xorpd xmm1, xmm1
         xorpd xmm3, xmm3
-        cmp     rsi, 0                  ; jeigu kiek yra 0...
+        cmp     rsi, 0
         je      .pab
     .toliau:
         movsd xmm2, [rdi]
-        cmpsd xmm2, xmm1, 1
-        je .mazesnis
+        comisd xmm2, xmm3
+        jnb .tesk
+        comisd xmm0, xmm3
+        je .zero
+        comisd xmm0, xmm2
+        jb .mazesnis
         .tesk:
-        add     rdi, 8                  ; i++
-        dec     rsi                     ; kiek--
-        jnz     .toliau                 ; jeigu dar yra skaičių
+        add     rdi, 8
+        dec     rsi
+        jnz     .toliau
     .pab:
-        movsd xmm0, xmm1
         pop rbx
-        ret 
+        ret
+    .zero:
+        comisd xmm2, xmm0
+        jb .naujas
     .mazesnis:
-          cmpsd xmm1, xmm3, 0
-          je .naujas
+          comisd xmm2, xmm0
+          jnb .naujas
           jmp .tesk
           .naujas:
-          movsd xmm1, [rdi]
-          jmp .tesk  
-        
-_suma:
-        push rbx
-        xorpd   xmm0, xmm0              ; xmm0 <- 0
-        cmp     rsi, 0                  ; jeigu kiek yra 0... 
-        je      .pab
-    .toliau:
-        addsd   xmm0, [rdi]             ; xmm0 += masyvas[i] 
-        add     rdi, 8                  ; i++
-        dec     rsi                     ; kiek--
-        jnz     .toliau                 ; jeigu dar yra skaičių
-    .pab:
-        pop rbx
-        ret   
+          movsd xmm0, xmm2
+          jmp .tesk
+
 ;-----------------------------------------------------------------------------
-;   double arvisi(double* masyvas1, uint64_t kiek)
+;   uint64_t arvisi(double* masyvas1, uint64_t kiek)
 ;                      rdi             rsi                
 ;-----------------------------------------------------------------------------
+.data
 
-        
+upperbound dq 10.0        
+
+arvisi:
+	    push    rbx
+	    movsd   xmm0, [upperbound]
+        xorpd   xmm3, xmm3
+        mov     rax, 0
+        cmp     rsi, 0 
+        je      .end
+
+    .next:
+        movsd   xmm2, qword [rdi]
+	    ucomisd xmm1, xmm2
+	    jnz	.check
+        add     rdi, 8
+        dec     rsi
+        jnz     .next
+    .end:
+        pop rbx
+        ret   
+    .check
+	movsd	xmm1, xmm2
+	mulsd	xmm2, xmm1
+	mulsd	xmm2, xmm1
+
+	comisd	xmm2, xmm0
+	ja	.next
+	
+	comisd	xmm2, xmm3
+	jb	.next
+
+	inc rax
+	jmp	.next
+
